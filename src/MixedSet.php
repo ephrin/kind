@@ -2,7 +2,7 @@
 
 namespace Ephrin\Kind;
 
-class MixedSet implements Set, \IteratorAggregate, \Countable
+class MixedSet implements \IteratorAggregate, \Countable
 {
     /**
      * @var node|null
@@ -16,22 +16,23 @@ class MixedSet implements Set, \IteratorAggregate, \Countable
 
     public function __construct(...$items)
     {
-        $this->head = $this->build(...$items);
+        $this->head = $this->build(\func_num_args(), ...$items);
     }
 
     /**
+     * @param int $acc
      * @param array ...$items
      * @return node|null
      */
-    private function build(...$items)
+    private function build(int $acc,  ...$items): ?node
     {
-        if (\func_num_args() === 0) {
+        if ($acc === 0) {
             return null;
         }
         $this->count++;
         $node = new node();
         $node->value = array_shift($items);
-        $node->tail = $this->build(...$items);
+        $node->tail = $this->build($acc - 1, ...$items);
 
         return $node;
     }
